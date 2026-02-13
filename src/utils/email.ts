@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
 // src/utils/email.ts
+import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 // Explicitly load .env file

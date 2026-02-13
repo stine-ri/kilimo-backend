@@ -1,8 +1,10 @@
+// src/index.ts
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import * as dotenv from 'dotenv';
+import { db } from "./drizzle/db";
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -60,6 +62,31 @@ app.onError((err, c) => {
     },
     500
   );
+});
+
+app.get('/health', async (c) => {
+  try {
+    // Check database connection
+    await db.query.users.findFirst();
+    
+    return c.json({
+      success: true,
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV,
+      services: {
+        database: 'connected',
+        email: process.env.SMTP_USER ? 'configured' : 'not configured',
+      },
+    });
+  } catch (error: any) {
+    return c.json({
+      success: false,
+      status: 'unhealthy',
+      error: error.message,
+    }, 500);
+  }
 });
 
 // Start server

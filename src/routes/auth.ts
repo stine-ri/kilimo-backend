@@ -1,3 +1,5 @@
+// kilimo-backend/src/routes/auth.ts
+
 import { Hono } from 'hono';
 import { db } from '../drizzle/db';
 import { users, otpVerifications } from '../drizzle/schema';
@@ -16,11 +18,12 @@ import {
   getOTPExpiration,
 } from '../utils/auth';
 import { sendOTPEmail, sendWelcomeEmail } from '../utils/email';
+import { authLimiter, otpLimiter } from '../utils/rateLimiter';
 
 const authRoutes = new Hono();
 
 // Register endpoint
-authRoutes.post('/register', async (c) => {
+authRoutes.post('/register', authLimiter, async (c) => {
   try {
     const body = await c.req.json();
     const validatedData = registerSchema.parse(body);
@@ -111,7 +114,7 @@ authRoutes.post('/register', async (c) => {
 });
 
 // Login endpoint
-authRoutes.post('/login', async (c) => {
+authRoutes.post('/login', authLimiter, async (c) => {
   try {
     const body = await c.req.json();
     const validatedData = loginSchema.parse(body);
@@ -353,7 +356,7 @@ authRoutes.post('/verify-otp', async (c) => {
 });
 
 // Resend OTP endpoint
-authRoutes.post('/resend-otp', async (c) => {
+authRoutes.post('/resend-otp', authLimiter,  async (c) => {
   try {
     const body = await c.req.json();
     const validatedData = resendOTPSchema.parse(body);
