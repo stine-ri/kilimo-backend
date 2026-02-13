@@ -1,211 +1,140 @@
-# Kilimo Mobile App (React Native)
+# Kilimo App Backend API
 
-> A modern, feature-rich mobile application for farmers, built with React Native, TypeScript, and React Navigation. Connect with the Kilimo farming assistant platform through an intuitive, secure mobile experience.
+> A robust Node.js backend API for the Kilimo farming assistant application, built with Hono, TypeScript, PostgreSQL (Neon), and Drizzle ORM.
 
-[![React Native](https://img.shields.io/badge/React%20Native-0.73-blue.svg)](https://reactnative.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Expo](https://img.shields.io/badge/Expo-Latest-black.svg)](https://expo.dev/)
+[![Hono](https://img.shields.io/badge/Hono-Latest-orange.svg)](https://hono.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-336791.svg)](https://neon.tech/)
+[![Drizzle ORM](https://img.shields.io/badge/Drizzle-ORM-green.svg)](https://orm.drizzle.team/)
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Configuration](#configuration)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
 - [Running the Application](#running-the-application)
-- [App Flow](#app-flow)
-- [Key Components](#key-components)
-- [State Management](#state-management)
-- [API Integration](#api-integration)
+- [API Documentation](#api-documentation)
+- [Authentication Flow](#authentication-flow)
 - [Security Features](#security-features)
 - [Development Notes](#development-notes)
-- [Build & Deployment](#build--deployment)
-- [Troubleshooting](#troubleshooting)
-- [Future Enhancements](#future-enhancements)
+- [Testing](#testing)
+- [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
 
 ---
 
-## 🌟 Overview
+## Overview
 
-Kilimo Mobile App is the client-side companion to the Kilimo farming assistant platform. It provides farmers with a seamless mobile experience to register, authenticate via email OTP verification, and submit farming-related forms and inquiries.
+Kilimo App Backend is a production-ready REST API that powers the Kilimo farming assistant mobile application. It provides secure user authentication with email verification via OTP, form submission capabilities, and comprehensive user management.
 
 ### Developer's Note
 
-*This project was developed following the Kilimo App Practical Assessment requirements. The initial commit includes the complete implementation with all core features and additional enhancements. I acknowledge that in a real-world scenario, commits would be incremental and feature-specific, following proper version control best practices. This approach was taken to deliver a fully functional solution within the assessment timeframe, demonstrating comprehensive understanding of React Native development, authentication flows, and mobile UX patterns.*
+*This project was developed following the Kilimo App Practical Assessment requirements. The initial commit includes the complete implementation with all core features. I acknowledge that in a real-world scenario, commits would be incremental and feature-specific. This approach was taken to deliver a fully functional solution within the assessment timeframe.*
 
 ---
 
-## ✨ Features
+##  Features
 
 ### Core Functionality
-- ✅ **User Registration** - Create new accounts with email verification
-- ✅ **Email/Password Authentication** - Secure login system
-- ✅ **OTP Email Verification** - 6-digit code sent to email (2-minute expiry)
-- ✅ **Form Submission** - Submit farming inquiries and information
-- ✅ **Submission History** - View all past submissions
-- ✅ **Submission Details** - View detailed information for each submission
-- ✅ **Edit Submissions** - Update existing submissions (BONUS FEATURE)
-- ✅ **Delete Submissions** - Remove submissions with confirmation (BONUS FEATURE)
+-  **User Registration** with email/password
+-  **Email Verification** via 6-digit OTP (2-minute expiry)
+-  **Secure Authentication** using JWT tokens
+-  **Form Submission** for authenticated users
+-  **User Profile Management**
 
-### User Experience Features
-- 🎨 **Beautiful UI/UX** - Clean, modern interface with custom icons
-- 🔄 **Smart Form Switching** - Smooth transitions between login/register
-- 👁️ **Password Visibility Toggle** - Show/hide password option
-- ⏱️ **OTP Timer** - Real-time countdown for OTP expiration
-- 🔄 **Pull to Refresh** - Refresh submission list
-- ⚡ **Loading States** - Clear feedback for all async operations
-- 📱 **Keyboard Handling** - Proper keyboard avoidance on all screens
-- 🎯 **Form Pre-filling** - Auto-fill user data from profile
-- ✅ **Input Validation** - Real-time validation with error messages
-- 🚪 **Session Management** - Auto-logout on token expiration
+### Security Features
+-  **Password Hashing** with bcrypt (10 salt rounds)
+-  **JWT Authentication** with 7-day token expiry
+-  **Rate Limiting** on authentication endpoints
+-  **Email Verification** mandatory before access
+-  **OTP Attempt Limiting** (max 3 attempts)
+-  **Input Validation** using Zod schemas
 
-### Technical Features
-- 🔐 **JWT Token Storage** - Secure local storage with AsyncStorage
-- 📡 **API Integration** - Full REST API integration with error handling
-- 🎯 **Navigation** - Stack navigation with proper routing
-- 💾 **Local Persistence** - User data and token persistence
-- 🔄 **Auto-navigation** - Smart redirect based on auth state
-- 📊 **Empty States** - Helpful UI when no data exists
+### Additional Features
+-  **Email Service** with HTML templates (OTP & Welcome emails)
+-  **PostgreSQL Database** hosted on Neon (serverless)
+-  **Drizzle ORM** for type-safe database queries
+-  **Database Migrations** support
+-  **Comprehensive Error Handling**
+-  **Health Check Endpoint**
+-  **TypeScript** for full type safety
 
 ---
 
-## 📱 Screenshots
+##  Tech Stack
 
-```
-┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐
-│   Login Screen      │  │  Register Screen    │  │   OTP Screen        │
-│                     │  │                     │  │                     │
-│  [Logo]             │  │  [Logo]             │  │  [Logo]             │
-│   Kilimo            │  │   Kilimo            │  │  Verify Email       │
-│                     │  │                     │  │                     │
-│  [Email]            │  │  [First Name]       │  │  Enter 6-digit code │
-│  [Password] 👁️      │  │  [Last Name]        │  │  sent to:           │
-│                     │  │  [Phone]            │  │  user@email.com     │
-│  [Login Button]     │  │  [Email]            │  │                     │
-│                     │  │  [Password] 👁️      │  │  [000000]           │
-│  Don't have         │  │                     │  │                     │
-│  account? Register  │  │  [Register Button]  │  │  Code expires: 1:45 │
-│                     │  │                     │  │                     │
-│                     │  │  Already have       │  │  [Verify Button]    │
-│                     │  │  account? Login     │  │                     │
-│                     │  │                     │  │  Resend Code        │
-└─────────────────────┘  └─────────────────────┘  └─────────────────────┘
-
-┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐
-│   Form Screen       │  │  Submissions List   │  │ Submission Details  │
-│                     │  │                     │  │                     │
-│  [Logo]  📜   Logout│  │  ← My Submissions  +│  │  ← Details     🗑️   │
-│  Farmer Form        │  │                     │  │                     │
-│                     │  │  John Doe           │  │  Personal Info      │
-│  [First Name]       │  │  Jan 15, 2024 10:30 │  │  Name: John Doe     │
-│  [Last Name]        │  │  Need help with...  │  │  Email: john@...    │
-│  [Email] (disabled) │  │  john@email.com     │  │  Phone: +254...     │
-│  [Phone]            │  │  View Details → 🗑️  │  │                     │
-│  [Message]          │  │                     │  │  Message            │
-│  (minimum 10 chars) │  │  Jane Smith         │  │  [Full message      │
-│                     │  │  Jan 14, 2024 09:15 │  │   content here...]  │
-│  [Submit Form]      │  │  Looking for...     │  │                     │
-│                     │  │  jane@email.com     │  │  Submission ID      │
-│                     │  │  View Details → 🗑️  │  │  abc-123-def        │
-└─────────────────────┘  └─────────────────────┘  └─────────────────────┘
-```
+| Category | Technology |
+|----------|-----------|
+| **Runtime** | Node.js |
+| **Framework** | Hono.js |
+| **Language** | TypeScript |
+| **Database** | PostgreSQL (Neon - Serverless) |
+| **ORM** | Drizzle ORM |
+| **Authentication** | JWT (jsonwebtoken) |
+| **Password Hashing** | bcrypt.js |
+| **Validation** | Zod |
+| **Email Service** | Nodemailer |
+| **Rate Limiting** | hono-rate-limiter |
 
 ---
 
-## 🛠️ Tech Stack
-
-| Category | Technology | Purpose |
-|----------|-----------|---------|
-| **Framework** | React Native | Cross-platform mobile development |
-| **Language** | TypeScript | Type safety and better DX |
-| **Navigation** | React Navigation v6 | Screen navigation & routing |
-| **State** | React Hooks (useState, useEffect) | Component state management |
-| **Storage** | AsyncStorage | Local data persistence |
-| **HTTP Client** | Axios | API requests |
-| **UI Components** | React Native Core | Native UI components |
-| **Icons & Images** | PNG Assets | Custom icon set |
-| **Platform** | iOS & Android | Cross-platform support |
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-kilimo-mobile/
+kilimo-backend/
 ├── src/
-│   ├── screens/
-│   │   ├── LoginScreen.tsx              # Login & Registration
-│   │   ├── OTPScreen.tsx                # Email verification
-│   │   ├── FormScreen.tsx               # Form submission
-│   │   ├── SubmissionsScreen.tsx        # Submission history list
-│   │   ├── SubmissionDetailScreen.tsx   # Submission details view
-│   │   └── EditSubmissionScreen.tsx     # Edit submission (BONUS)
-│   ├── navigation/
-│   │   └── appNavigator.tsx             # Navigation configuration
-│   ├── constants/
-│   │   └── styles.ts                    # Global styles & colors
+│   ├── drizzle/
+│   │   ├── db.ts              # Database connection & configuration
+│   │   ├── schema.ts          # Database schema definitions
+│   │   ├── migrate.ts         # Migration runner
+│   │   └── migrations/        # SQL migration files
+│   ├── middleware/
+│   │   └── bearAuth.ts        # JWT authentication middleware
+│   ├── routes/
+│   │   ├── auth.ts            # Authentication endpoints
+│   │   └── form.ts            # Form submission endpoints
 │   ├── utils/
-│   │   ├── api.ts                       # API configuration
-│   │   └── storage.ts                   # AsyncStorage helpers
-│   └── types/                           # TypeScript type definitions
-│       └── index.ts
-├── assets/
-│   ├── plantimage.png                   # App logo
-│   ├── user-icon.png
-│   ├── email-icon.png
-│   ├── phone-icon.png
-│   ├── shield-icon.png
-│   ├── eye-open-icon.png
-│   ├── eye-closed-icon.png
-│   ├── key-icon.png
-│   ├── clock-icon.png
-│   ├── submit-icon.png
-│   ├── logout-icon.png
-│   ├── back-icon.png
-│   ├── delete-icon.png
-│   ├── history-icon.png
-│   └── updated-icon.png
-├── App.tsx                              # Root component
+│   │   ├── auth.ts            # Auth helper functions
+│   │   ├── email.ts           # Email service
+│   │   ├── validation.ts      # Zod validation schemas
+│   │   └── rateLimiter.ts     # Rate limiting configuration
+│   └── index.ts               # Main application entry point
+├── .env.example               # Environment variables template
+├── .gitignore
 ├── package.json
 ├── tsconfig.json
-├── app.json                             # Expo configuration
+├── drizzle.config.ts          # Drizzle configuration
 └── README.md
 ```
 
 ---
 
-## 📦 Prerequisites
+##  Prerequisites
 
 Before you begin, ensure you have the following installed:
 
 - **Node.js** >= 18.x
 - **npm** or **yarn** or **pnpm**
-- **Expo CLI** (recommended) or React Native CLI
-- **iOS Simulator** (Mac only) or **Android Emulator**
-- **Physical device** with Expo Go app (optional)
-
-### For React Native CLI (if not using Expo):
-- **Xcode** (Mac only, for iOS)
-- **Android Studio** (for Android)
-- **CocoaPods** (Mac only)
+- **PostgreSQL** (or Neon account)
+- **SMTP Email Service** (Gmail, SendGrid, etc.)
 
 ---
 
-## 🚀 Installation
+##  Installation
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/kilimo-mobile.git
-cd kilimo-mobile
+git clone https://github.com/stine-ri/kilimo-mobile-app.git
+cd kilimo-backend
 ```
 
 ### 2. Install Dependencies
@@ -218,928 +147,667 @@ yarn install
 pnpm install
 ```
 
-### 3. Install iOS Dependencies (Mac only)
+### 3. Set Up Environment Variables
+
+Copy the example environment file and configure it:
 
 ```bash
-cd ios
-pod install
-cd ..
+cp .env.example .env
 ```
+
+Edit `.env` with your actual values (see [Environment Variables](#environment-variables) section).
 
 ---
 
-## 🔐 Configuration
+##  Environment Variables
 
-### 1. Update API URL
+Create a `.env` file in the root directory with the following variables:
 
-Edit `src/utils/api.ts`:
+```env
+# Database Configuration (Neon PostgreSQL)
+DATABASE_URL=postgresql://username:password@host/database?sslmode=require
 
-```typescript
-// Development - Your local backend
-export const API_URL = 'http://192.168.100.4:3000';
+# Server Configuration
+PORT=3000
+NODE_ENV=development
 
-// Production - Your deployed backend
-// export const API_URL = 'https://api.kilimo.com';
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt
+
+# Email Configuration (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-specific-password
+FROM_EMAIL=your-email@gmail.com
+
+# Optional: Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=5
 ```
 
-**Important Notes:**
-- For **iOS Simulator**: Use `http://localhost:3000` if backend is on same machine
-- For **Android Emulator**: Use `http://10.0.2.2:3000` to access localhost
-- For **Physical Device**: Use your computer's local IP (e.g., `http://192.168.1.100:3000`)
-- For **Production**: Use your deployed backend URL
+### 📧 Email Configuration Notes
 
-### 2. Finding Your Local IP Address
+For **Gmail**:
+1. Enable 2-Factor Authentication
+2. Generate an App-Specific Password
+3. Use the app password in `SMTP_PASS`
 
-**On Mac/Linux:**
+For other providers, adjust `SMTP_HOST` and `SMTP_PORT` accordingly.
+
+### 🗄️ Database Setup (Neon)
+
+Following the assessment requirements, this project uses **Neon** as the PostgreSQL cloud provider:
+
+1. Create account at [neon.tech](https://neon.tech)
+2. Create a new project
+3. Copy the connection string
+4. Add to `.env` as `DATABASE_URL`
+
+---
+
+## 💾 Database Setup
+
+### 1. Generate Migration Files
+
 ```bash
-ifconfig | grep "inet " | grep -v 127.0.0.1
+npm run db:generate
 ```
 
-**On Windows:**
-```bash
-ipconfig
-```
-
-Look for your IPv4 address (usually starts with 192.168.x.x or 10.0.x.x)
-
----
-
-## ▶️ Running the Application
-
-### Using Expo (Recommended)
+### 2. Run Migrations
 
 ```bash
-# Start Expo development server
-npx expo start
-
-# Scan QR code with:
-# - Expo Go app (iOS/Android)
-# - Camera app (iOS only)
-
-# Or press:
-# - 'i' for iOS simulator
-# - 'a' for Android emulator
-# - 'w' for web (if supported)
+npm run db:migrate
 ```
 
-### Using React Native CLI
+### 3. (Optional) Push Schema Directly
 
-**iOS:**
+For development, you can push schema changes directly:
+
 ```bash
-npx react-native run-ios
-# Or specify device
-npx react-native run-ios --simulator="iPhone 15 Pro"
+npm run db:push
 ```
 
-**Android:**
+### 4. Open Drizzle Studio (Database GUI)
+
 ```bash
-# Start Metro bundler
-npx react-native start
-
-# In another terminal
-npx react-native run-android
-```
-
-### Development Tips
-
-- **Clear Metro cache** if you encounter issues:
-  ```bash
-  npx react-native start --reset-cache
-  ```
-
-- **Clear Expo cache:**
-  ```bash
-  npx expo start -c
-  ```
-
-- **Rebuild iOS app:**
-  ```bash
-  cd ios && pod install && cd ..
-  npx react-native run-ios
-  ```
-
----
-
-## 🔄 App Flow
-
-### Authentication Flow
-
-```
-┌─────────────┐
-│ App Launch  │
-└──────┬──────┘
-       │
-       ├─── Check AsyncStorage for token
-       │
-       ├─── Token exists & valid?
-       │    ├─── YES → Navigate to Form Screen
-       │    └─── NO  → Navigate to Login Screen
-       │
-       └─── Login Screen
-            │
-            ├─── New user? → Register
-            │    │
-            │    ├─── Submit registration
-            │    ├─── Receive OTP email
-            │    └─── Navigate to OTP Screen
-            │
-            └─── Existing user? → Login
-                 │
-                 ├─── Verified user?
-                 │    ├─── YES → Receive JWT token → Navigate to Form Screen
-                 │    └─── NO  → Resend OTP → Navigate to OTP Screen
-                 │
-                 └─── OTP Screen
-                      │
-                      ├─── Enter 6-digit code
-                      ├─── Verify OTP
-                      ├─── Receive JWT token
-                      ├─── Save token to AsyncStorage
-                      └─── Navigate to Form Screen
-```
-
-### Form Submission Flow
-
-```
-┌──────────────┐
-│  Form Screen │
-└──────┬───────┘
-       │
-       ├─── Load user data from AsyncStorage
-       ├─── Pre-fill: First Name, Last Name, Email, Phone
-       ├─── User enters message (min 10 chars)
-       ├─── Validate all fields
-       ├─── Submit form with JWT token
-       │
-       ├─── Success?
-       │    ├─── YES → Show success alert → Clear message field
-       │    └─── NO  → Show error alert
-       │              └─── 401 Unauthorized? → Logout → Navigate to Login
-       │
-       └─── View Submissions
-            │
-            ├─── Fetch all submissions
-            ├─── Display list with pull-to-refresh
-            ├─── Tap submission → Navigate to Detail Screen
-            │
-            └─── Detail Screen
-                 │
-                 ├─── View full submission details
-                 ├─── Delete submission (with confirmation)
-                 └─── Navigate back
+npm run db:studio
 ```
 
 ---
 
-## 🎯 Key Components
+##  Running the Application
 
-### 1. LoginScreen (src/screens/LoginScreen.tsx)
+### Development Mode (with auto-reload)
 
-**Features:**
-- Dual mode: Login & Registration
-- Form validation
-- Password visibility toggle
-- Smooth mode switching with loading state
-- OTP resend option for unverified users
-- Error handling with user-friendly messages
-
-**State Management:**
-```typescript
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
-const [firstName, setFirstName] = useState('');
-const [lastName, setLastName] = useState('');
-const [phoneNumber, setPhoneNumber] = useState('');
-const [isRegistering, setIsRegistering] = useState(false);
-const [loading, setLoading] = useState(false);
-const [showPassword, setShowPassword] = useState(false);
-const [isSwitching, setIsSwitching] = useState(false);
+```bash
+npm run dev
 ```
 
-**Key Functions:**
-- `handleAuth()` - Process login or registration
-- `handleResendOTP()` - Resend verification code
-- `handleModeSwitch()` - Toggle between login/register
+### Production Mode
+
+```bash
+# Build TypeScript
+npm run build
+
+# Start production server
+npm start
+```
+
+The server will start on `http://localhost:3000` (or your configured PORT).
 
 ---
 
-### 2. OTPScreen (src/screens/OTPScreen.tsx)
+## API Documentation
 
-**Features:**
-- 6-digit OTP input
-- 2-minute countdown timer
-- Resend functionality (disabled until timer expires)
-- Auto-focus on input
-- Navigation to login or form screen
-
-**State Management:**
-```typescript
-const [otp, setOtp] = useState('');
-const [loading, setLoading] = useState(false);
-const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
-const { email } = route.params;
+### Base URL
+```
+http://localhost:3000
 ```
 
-**Key Functions:**
-- `verifyOTP()` - Verify the entered code
-- `resendOTP()` - Request new verification code
-- `formatTime()` - Display countdown in MM:SS format
+### Health Check
 
----
-
-### 3. FormScreen (src/screens/FormScreen.tsx)
-
-**Features:**
-- Auto-fill user data from profile
-- All fields required with validation
-- Message minimum 10 characters
-- Email field disabled (from profile)
-- Logout functionality
-- Navigate to submissions history
-- Clear message after successful submission
-
-**State Management:**
-```typescript
-const [formData, setFormData] = useState({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phoneNumber: '',
-  message: ''
-});
-const [loading, setLoading] = useState(false);
+```http
+GET /health
 ```
 
-**Key Functions:**
-- `loadUserData()` - Pre-fill form from AsyncStorage
-- `handleSubmit()` - Submit form to API
-- `handleLogout()` - Clear session and navigate to login
-
----
-
-### 4. SubmissionsScreen (src/screens/SubmissionsScreen.tsx)
-
-**Features:**
-- Display all user submissions
-- Pull-to-refresh
-- Empty state with helpful message
-- Delete submission with confirmation
-- Navigate to detail view
-- Date formatting
-- Loading states
-
-**State Management:**
-```typescript
-const [submissions, setSubmissions] = useState<Submission[]>([]);
-const [loading, setLoading] = useState(true);
-const [refreshing, setRefreshing] = useState(false);
-```
-
-**Key Functions:**
-- `loadSubmissions()` - Fetch submissions from API
-- `onRefresh()` - Pull-to-refresh handler
-- `handleDelete()` - Delete submission with confirmation
-- `formatDate()` - Format date for display
-
----
-
-### 5. SubmissionDetailScreen (src/screens/SubmissionDetailScreen.tsx)
-
-**Features:**
-- View complete submission details
-- Delete functionality
-- Formatted timestamps
-- Back navigation
-- Organized sections for personal info, message, and metadata
-
-**Key Functions:**
-- `handleDelete()` - Delete with confirmation
-- `formatDate()` - Full date formatting with time
-
----
-
-### 6. EditSubmissionScreen (BONUS FEATURE)
-
-**Features:**
-- Edit existing submissions
-- Real-time validation
-- Inline error messages
-- Update confirmation
-- Cancel option
-
-**State Management:**
-```typescript
-const [formData, setFormData] = useState({...submission});
-const [loading, setLoading] = useState(false);
-const [errors, setErrors] = useState<Record<string, string>>({});
-```
-
-**Key Functions:**
-- `validateForm()` - Validate all inputs
-- `handleUpdate()` - Update submission via API
-
----
-
-## 💾 State Management
-
-### AsyncStorage Usage
-
-The app uses React Native's AsyncStorage for local persistence:
-
-```typescript
-// src/utils/storage.ts
-export const storage = {
-  // Store JWT token
-  setToken: async (token: string) => {
-    await AsyncStorage.setItem('token', token);
-  },
-  
-  // Retrieve JWT token
-  getToken: async () => {
-    return await AsyncStorage.getItem('token');
-  },
-  
-  // Store user profile
-  setUser: async (user: User) => {
-    await AsyncStorage.setItem('user', JSON.stringify(user));
-  },
-  
-  // Retrieve user profile
-  getUser: async () => {
-    const user = await AsyncStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  },
-  
-  // Clear all data (logout)
-  clearAll: async () => {
-    await AsyncStorage.multiRemove(['token', 'user']);
-  },
-};
-```
-
-**Stored Data:**
-- `token` - JWT authentication token
-- `user` - User profile (id, email, firstName, lastName, phoneNumber)
-
----
-
-## 📡 API Integration
-
-### API Client Configuration
-
-```typescript
-// src/utils/api.ts
-import axios from 'axios';
-
-export const API_URL = 'http://192.168.100.4:3000';
-
-export const api = axios.create({
-  baseURL: API_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-```
-
-### API Endpoints Used
-
-| Endpoint | Method | Purpose | Auth Required |
-|----------|--------|---------|---------------|
-| `/api/auth/register` | POST | Register new user | No |
-| `/api/auth/login` | POST | Login user | No |
-| `/api/auth/verify-otp` | POST | Verify OTP code | No |
-| `/api/auth/resend-otp` | POST | Resend OTP | No |
-| `/api/form/submit` | POST | Submit form | Yes |
-| `/api/form/submissions` | GET | Get all submissions | Yes |
-| `/api/form/submissions/:id` | GET | Get one submission | Yes |
-| `/api/form/submissions/:id` | DELETE | Delete submission | Yes |
-| `/api/form/submissions/:id` | PUT | Update submission | Yes |
-
-### Example API Calls
-
-**Login:**
-```typescript
-const response = await axios.post(`${API_URL}/api/auth/login`, {
-  email: 'user@example.com',
-  password: 'Password123'
-});
-
-if (response.data.success) {
-  await storage.setToken(response.data.data.token);
-  await storage.setUser(response.data.data.user);
+**Response:**
+```json
+{
+  "success": true,
+  "status": "healthy",
+  "timestamp": "2024-02-13T10:30:00.000Z",
+  "uptime": 3600,
+  "environment": "development",
+  "services": {
+    "database": "connected",
+    "email": "configured"
+  }
 }
 ```
 
-**Submit Form:**
-```typescript
-const token = await storage.getToken();
-const response = await axios.post(
-  `${API_URL}/api/form/submit`,
-  formData,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
+---
+
+### Authentication Endpoints
+
+#### 1. Register User
+
+```http
+POST /api/auth/register
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "email": "farmer@example.com",
+  "password": "SecurePass123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "+254712345678"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "success": true,
+  "message": "Registration successful. Please check your email for OTP.",
+  "data": {
+    "userId": "uuid-here",
+    "email": "farmer@example.com"
+  }
+}
+```
+
+**Password Requirements:**
+- Minimum 8 characters
+- At least one uppercase letter
+- At least one lowercase letter
+- At least one number
+
+---
+
+#### 2. Login User
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "email": "farmer@example.com",
+  "password": "SecurePass123"
+}
+```
+
+**Response (200 OK) - Verified User:**
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "token": "jwt-token-here",
+    "user": {
+      "id": "uuid-here",
+      "email": "farmer@example.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "+254712345678"
     }
   }
+}
+```
+
+**Response (403 Forbidden) - Unverified User:**
+```json
+{
+  "success": false,
+  "message": "Account not verified. OTP sent to your email.",
+  "requiresOTP": true,
+  "email": "farmer@example.com"
+}
+```
+
+---
+
+#### 3. Verify OTP
+
+```http
+POST /api/auth/verify-otp
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "email": "farmer@example.com",
+  "otpCode": "123456"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "OTP verified successfully",
+  "data": {
+    "token": "jwt-token-here",
+    "user": {
+      "id": "uuid-here",
+      "email": "farmer@example.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "+254712345678"
+    }
+  }
+}
+```
+
+**OTP Rules:**
+- 6-digit code
+- Expires in 2 minutes
+- Maximum 3 attempts
+- New OTP invalidates old ones
+
+---
+
+#### 4. Resend OTP
+
+```http
+POST /api/auth/resend-otp
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "email": "farmer@example.com"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "New OTP sent to your email"
+}
+```
+
+---
+
+### Form Endpoints (Protected)
+
+All form endpoints require JWT authentication:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+#### 5. Submit Form
+
+```http
+POST /api/form/submit
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "farmer@example.com",
+  "phoneNumber": "+254712345678",
+  "message": "I need help with crop disease identification."
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "success": true,
+  "message": "Form submitted successfully",
+  "data": {
+    "submissionId": "uuid-here",
+    "submittedAt": "2024-02-13T10:30:00.000Z"
+  }
+}
+```
+
+**Validation Rules:**
+- All fields required
+- Message minimum 10 characters
+- Phone number minimum 10 digits
+
+---
+
+#### 6. Get All Submissions
+
+```http
+GET /api/form/submissions
+Authorization: Bearer <token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid-here",
+      "userId": "user-uuid",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "farmer@example.com",
+      "phoneNumber": "+254712345678",
+      "message": "I need help with crop disease identification.",
+      "createdAt": "2024-02-13T10:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+#### 7. Get Specific Submission
+
+```http
+GET /api/form/submissions/:id
+Authorization: Bearer <token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-here",
+    "userId": "user-uuid",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "farmer@example.com",
+    "phoneNumber": "+254712345678",
+    "message": "I need help with crop disease identification.",
+    "createdAt": "2024-02-13T10:30:00.000Z"
+  }
+}
+```
+
+---
+
+### Error Responses
+
+All endpoints follow a consistent error format:
+
+```json
+{
+  "success": false,
+  "message": "Error description here",
+  "errors": [] // validation errors
+}
+```
+
+**Common HTTP Status Codes:**
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request (validation error)
+- `401` - Unauthorized (missing/invalid token)
+- `403` - Forbidden (unverified account)
+- `404` - Not Found
+- `429` - Too Many Requests (rate limit exceeded)
+- `500` - Internal Server Error
+
+---
+
+## 🔄 Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Database
+    participant Email
+
+    Client->>API: POST /api/auth/register
+    API->>Database: Create user (isVerified: false)
+    API->>Database: Create OTP record
+    API->>Email: Send OTP email
+    API-->>Client: 201 Created
+
+    Client->>API: POST /api/auth/verify-otp
+    API->>Database: Verify OTP
+    API->>Database: Mark user as verified
+    API->>Email: Send welcome email
+    API-->>Client: 200 OK + JWT token
+
+    Client->>API: POST /api/form/submit (with JWT)
+    API->>API: Verify JWT token
+    API->>Database: Save form submission
+    API-->>Client: 201 Created
+```
+
+---
+
+##  Security Features
+
+### Implemented Security Measures
+
+1. **Password Security**
+   - Bcrypt hashing with 10 salt rounds
+   - Strong password requirements enforced
+   - Passwords never stored in plain text
+
+2. **JWT Authentication**
+   - 7-day token expiry
+   - Secure secret key (configurable)
+   - Token verification middleware
+
+3. **Rate Limiting**
+   - Authentication endpoints: 5 requests per 15 minutes
+   - OTP endpoints: 3 requests per 10 minutes
+   - IP-based tracking
+
+4. **Email Verification**
+   - Mandatory OTP verification
+   - OTP expires in 2 minutes
+   - Maximum 3 verification attempts
+   - OTP invalidation on new request
+
+5. **Input Validation**
+   - Zod schema validation
+   - SQL injection protection via ORM
+   - XSS prevention through input sanitization
+
+6. **Database Security**
+   - Parameterized queries via Drizzle ORM
+   - Cascade deletes for data integrity
+   - UUID primary keys
+
+7. **CORS Configuration**
+   - Configurable allowed origins
+   - Credentials support
+
+---
+
+## 🗄️ Database Schema
+
+### Users Table
+```sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  phone_number VARCHAR(20),
+  is_verified BOOLEAN DEFAULT FALSE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMP DEFAULT NOW() NOT NULL
+);
+```
+
+### OTP Verifications Table
+```sql
+CREATE TABLE otp_verifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  otp_code VARCHAR(6) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  verified BOOLEAN DEFAULT FALSE NOT NULL,
+  attempts INTEGER DEFAULT 0 NOT NULL,
+  max_attempts INTEGER DEFAULT 3 NOT NULL
+);
+```
+
+### Form Submissions Table
+```sql
+CREATE TABLE form_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(20) NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 ```
 
 ---
 
-## 🔒 Security Features
-
-### Implemented Security Measures
-
-1. **JWT Token Authentication**
-   - Tokens stored securely in AsyncStorage
-   - Tokens sent in Authorization header
-   - Auto-logout on 401 Unauthorized response
-
-2. **Password Security**
-   - Minimum 8 characters required
-   - Must contain uppercase, lowercase, and number
-   - Password visibility toggle
-   - Secure entry (masked by default)
-
-3. **Session Management**
-   - Automatic session expiry handling
-   - Clear storage on logout
-   - Token refresh not implemented (future enhancement)
-
-4. **Input Validation**
-   - Email format validation
-   - Phone number format validation
-   - Message length validation
-   - Real-time error feedback
-
-5. **Error Handling**
-   - Network error detection
-   - User-friendly error messages
-   - Automatic retry suggestions
-   - No sensitive data in error logs
-
----
-
-## 🎨 Styling & Design
-
-### Color Palette
-
-```typescript
-export const colors = {
-  primary: '#4CAF50',        // Green - Main brand color
-  primaryLight: '#a5d6a7',   // Light green - Disabled states
-  background: '#f5f5f5',     // Light gray - App background
-  white: '#ffffff',          // White - Cards, inputs
-  danger: '#f44336',         // Red - Delete, errors
-  text: '#666',              // Gray - Secondary text
-  disabled: '#999',          // Medium gray - Disabled text
-  border: '#ddd',            // Light gray - Borders
-};
-```
-
-### Design Principles
-
-- ✅ **Consistent spacing** - 10px, 15px, 20px increments
-- ✅ **Shadow elevation** - Cards have subtle shadows for depth
-- ✅ **Icon consistency** - 20x20 for input icons, 24x24 for actions
-- ✅ **Touch targets** - Minimum 44x44 points (Apple HIG)
-- ✅ **Typography** - Clear hierarchy with font sizes 12-32
-- ✅ **Color contrast** - WCAG AA compliant text contrast
-- ✅ **Loading states** - ActivityIndicator on all async actions
-- ✅ **Empty states** - Helpful messages when no data exists
-
----
-
-## 👨‍💻 Development Notes
+##  Development Notes
 
 ### NPM Scripts
 
 ```json
 {
-  "start": "expo start",
-  "android": "expo start --android",
-  "ios": "expo start --ios",
-  "web": "expo start --web",
-  "build:android": "eas build --platform android",
-  "build:ios": "eas build --platform ios"
+  "dev": "tsx watch src/index.ts",
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "db:generate": "drizzle-kit generate",
+  "db:migrate": "tsx src/drizzle/migrate.ts",
+  "db:push": "drizzle-kit push",
+  "db:studio": "drizzle-kit studio"
 }
 ```
 
+### Code Quality
+
+- **TypeScript** strict mode enabled
+- **ESLint** (optional -> can be added)
+- **Prettier** (optional -> can be added)
+- Type-safe database queries with Drizzle
+- Comprehensive error handling
+
 ### Development Best Practices Followed
 
-✅ **TypeScript** for type safety  
-✅ **Component modularity** - Each screen is self-contained  
-✅ **Reusable styles** - Global style constants  
-✅ **Proper navigation** - Stack navigation with type-safe params  
-✅ **Error handling** - Try-catch blocks on all API calls  
-✅ **Loading states** - User feedback during operations  
-✅ **Input validation** - Client-side validation before API calls  
-✅ **Keyboard handling** - KeyboardAvoidingView on form screens  
-✅ **Accessibility** - Proper labels and touch targets  
-✅ **Consistent code style** - Following React Native conventions  
-
-### Code Quality Improvements Needed
-
-⚠️ **Add unit tests** - Jest + React Native Testing Library  
-⚠️ **Add E2E tests** - Detox or Maestro  
-⚠️ **Add error monitoring** - Sentry or similar  
-⚠️ **Add analytics** - Firebase Analytics  
-⚠️ **Implement auth context** - Global state for auth  
-⚠️ **Add TypeScript strict mode** - Better type checking  
-⚠️ **Implement proper logging** - Replace console.log  
-⚠️ **Add offline support** - Queue failed requests  
-⚠️ **Implement biometric auth** - Face ID / Touch ID  
+ Environment-based configuration  
+ Separation of concerns (routes, middleware, utils)  
+ Type safety throughout the codebase  
+ Consistent API response format  
+ Comprehensive input validation  
+ Proper error handling and logging  
+ Database migrations for version control  
+ Modular and reusable code structure  
 
 ---
 
-## 📦 Build & Deployment
+##  Testing
 
-### Development Build
+### Manual Testing
 
-**Using Expo:**
-```bash
-# Create development build
-eas build --profile development --platform ios
-eas build --profile development --platform android
-```
+Use tools like:
+- **Postman** - Import the API collection
+- **Thunder Client** (VS Code extension)
+- **cURL** - Command-line testing
+- **HTTPie** - User-friendly HTTP client
 
-### Production Build
-
-**iOS (App Store):**
-```bash
-# Build for TestFlight/App Store
-eas build --profile production --platform ios
-
-# Submit to App Store
-eas submit --platform ios
-```
-
-**Android (Play Store):**
-```bash
-# Build APK or AAB
-eas build --profile production --platform android
-
-# Submit to Play Store
-eas submit --platform android
-```
-
-### Environment Configuration
-
-Create `.env` files for different environments:
-
-**.env.development:**
-```bash
-API_URL=http://192.168.100.4:3000
-ENV=development
-```
-
-**.env.production:**
-```bash
-API_URL=https://api.kilimo.com
-ENV=production
-```
-
-### Over-The-Air (OTA) Updates
+### Example cURL Request
 
 ```bash
-# Publish update to Expo
-eas update --branch production
+# Register user
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "SecurePass123",
+    "firstName": "Test",
+    "lastName": "User",
+    "phoneNumber": "+254712345678"
+  }'
+
+# Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "SecurePass123"
+  }'
+
+# Submit form (replace with actual token)
+curl -X POST http://localhost:3000/api/form/submit \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "test@example.com",
+    "phoneNumber": "+254712345678",
+    "message": "This is a test message for the farming assistant."
+  }'
 ```
+
+### Automated Testing (Future Enhancement)
+
+Consider adding:
+- **Jest** for unit tests
+- **Supertest** for API integration tests
+- **Test coverage** reporting
 
 ---
 
-## ⚠️ Known Issues & Limitations
+##  Deployment
 
-### Data Refresh After Updates
+### Prerequisites for Production
 
-Currently, when you update or delete a submission and navigate back to the submissions list, you may need to manually pull down to refresh to see the updated content.
+- [ ] Change `JWT_SECRET` to a strong random value 
+- [ ] Set `NODE_ENV=production`
+- [ ] Configure production database URL
+- [ ] Set up production email service
+- [ ] Configure CORS allowed origins
+- [ ] Enable HTTPS
+- [ ] Set up monitoring and logging
+- [ ] Configure backup strategy
 
-**Why this happens:**
-- The app uses local state management without automatic refresh on navigation
-- This prevents unnecessary API calls on every screen focus
-- Gives users control over when to refresh data
+### Deployment Platforms
 
-**Workaround:**
-- Simply pull down (swipe down) on the submissions list to refresh
-- The list will update immediately with your changes
+This application can be deployed to:
 
-**Future Fix:**
-- Implementing automatic refresh using React Navigation's `useFocusEffect` hook
-- Or implementing a global state management solution (Redux/Context API)
+- **Railway** - Recommended for Hono apps
+- **Fly.io** - Good for Node.js apps
+- **Render** - Easy deployment with free tier
+- **Vercel** - Serverless deployment
+- **AWS EC2** - Full control
+- **Digital Ocean** - Droplets or App Platform
+- **Heroku** - Classic PaaS option
 
-**Note:** This is an intentional design choice to:
-- ✅ Minimize unnecessary API calls
-- ✅ Give users control over when to refresh data
-- ✅ Maintain smooth performance
-- ✅ Reduce backend load
+### Environment Variables Checklist
 
-### OTP Timer Behavior
+Before deploying, ensure all environment variables are set in your hosting platform:
 
-**Current Behavior:**
-- The OTP timer resets to 2 minutes when you request a new code
-- The backend also enforces a 2-minute expiry for security
-- Old codes are automatically invalidated when a new one is requested
-
-**Why it works this way:**
-- Client-side timer is for user convenience (visual countdown)
-- Server-side expiry is for security (cannot be bypassed)
-- Both work together to ensure secure verification
-
-### Form Validation Layers
-
-**Client-Side Validation:**
-- Provides immediate feedback to users
-- Prevents unnecessary API calls
-- Improves user experience
-
-**Server-Side Validation:**
-- Acts as a security backup
-- Cannot be bypassed by malicious users
-- Final authority on data validity
-
-**Note:** Both layers must pass for successful submission. This is industry best practice.
-
-### Email Field in Form Screen
-
-The email field is intentionally **disabled** (read-only) in the form submission screen because:
-- Email is tied to the authenticated user
-- Prevents users from submitting forms with mismatched email
-- Ensures data integrity and proper user tracking
-
-**If you need to change your email:**
-- This would require a profile editing screen (future enhancement)
-- Would need re-verification via OTP
-
-### AsyncStorage Limitations
-
-**Storage Capacity:**
-- AsyncStorage has a ~6MB limit on iOS
-- ~Unlimited on Android (limited by available storage)
-- Current usage: < 50KB (JWT token + user profile)
-
-**Security:**
-- AsyncStorage is not encrypted by default
-- Sensitive data (passwords) are never stored
-- JWT tokens expire after 7 days
-
-**Future Enhancement:**
-- Implement encrypted storage for production
-- Consider using react-native-keychain for sensitive data
-
-### Network Connectivity
-
-**No Offline Mode:**
-- App requires active internet connection
-- No request queuing for offline operations
-- All API calls fail gracefully with user-friendly messages
-
-**Planned Enhancement:**
-- Offline mode with request queue
-- Local caching of submissions
-- Sync when connection restored
-
-### Platform-Specific Behaviors
-
-**iOS:**
-- Keyboard handling may differ slightly from Android
-- Date formatting follows iOS locale settings
-- Safe area insets handled automatically
-
-**Android:**
-- Back button closes app from Login screen
-- Hardware back button supported on all screens
-- Date formatting follows Android locale settings
-
-### Performance Notes
-
-**Large Submission Lists:**
-- FlatList efficiently handles hundreds of items
-- However, initial load may be slower with 100+ submissions
-- Future enhancement: Implement pagination
-
-**Image Loading:**
-- Icons are loaded from local assets (fast)
-- No remote images currently implemented
-- Future enhancement: Optimize with FastImage
+-  `DATABASE_URL` (Neon connection string)
+-  `JWT_SECRET` (strong secret key)
+-  `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+-  `PORT` (usually provided by platform)
+-  `NODE_ENV=production`
 
 ---
 
-## 🐛 Troubleshooting
-
-### Common Issues & Solutions
-
-#### 1. Network Request Failed
-
-**Problem:** API requests failing with network error
-
-**Solutions:**
-```bash
-# iOS Simulator - Edit API_URL to:
-export const API_URL = 'http://localhost:3000';
-
-# Android Emulator - Edit API_URL to:
-export const API_URL = 'http://10.0.2.2:3000';
-
-# Physical Device - Use your computer's local IP:
-export const API_URL = 'http://192.168.1.100:3000';
-```
-
-#### 2. Metro Bundler Cache Issues
-
-**Problem:** Changes not reflecting in app
-
-**Solution:**
-```bash
-# Clear cache and restart
-npx expo start -c
-# or
-npx react-native start --reset-cache
-```
-
-#### 3. iOS Pod Install Errors
-
-**Problem:** CocoaPods dependencies failing
-
-**Solution:**
-```bash
-cd ios
-rm -rf Pods Podfile.lock
-pod install
-cd ..
-```
-
-#### 4. Android Build Failures
-
-**Problem:** Gradle build failing
-
-**Solution:**
-```bash
-cd android
-./gradlew clean
-cd ..
-npx react-native run-android
-```
-
-#### 5. TypeScript Errors
-
-**Problem:** Type errors in VSCode
-
-**Solution:**
-```bash
-# Restart TypeScript server in VSCode
-Cmd/Ctrl + Shift + P → "TypeScript: Restart TS Server"
-```
-
-#### 6. White Screen on Launch
-
-**Problem:** App shows white screen
-
-**Solutions:**
-- Check console for errors
-- Verify API_URL is correct
-- Check network connectivity
-- Verify backend is running
-- Clear AsyncStorage: `AsyncStorage.clear()`
-
----
-
-## 🚀 Future Enhancements
-
-### Planned Features
-
-#### High Priority
-- [ ] Biometric authentication (Face ID / Touch ID)
-- [ ] Offline mode with request queue
-- [ ] Push notifications for OTP and updates
-- [ ] In-app language selection (i18n)
-- [ ] Dark mode support
-- [ ] Profile editing screen
-
-#### Medium Priority
-- [ ] Image upload for forms
-- [ ] File attachments support
-- [ ] Search functionality in submissions
-- [ ] Filter submissions by date
-- [ ] Export submissions to PDF
-- [ ] Share submission via email/WhatsApp
-
-#### Low Priority
-- [ ] Social login (Google, Facebook)
-- [ ] Fingerprint authentication
-- [ ] Voice input for messages
-- [ ] Chat support
-- [ ] In-app tutorials
-- [ ] Achievement badges
-
-### Technical Improvements
-- [ ] Implement Redux or Context API for state
-- [ ] Add unit tests (Jest + RTL)
-- [ ] Add E2E tests (Detox)
-- [ ] Implement code splitting
-- [ ] Add error monitoring (Sentry)
-- [ ] Add analytics (Firebase)
-- [ ] Implement refresh token flow
-- [ ] Add request caching
-- [ ] Optimize images
-- [ ] Implement CI/CD pipeline
-
----
-
-## 🧪 Testing
-
-### Manual Testing Checklist
-
-**Authentication Flow:**
-- [ ] Register new user
-- [ ] Receive OTP email
-- [ ] Verify OTP (valid code)
-- [ ] Verify OTP (invalid code)
-- [ ] Verify OTP (expired code)
-- [ ] Resend OTP
-- [ ] Login with verified account
-- [ ] Login with unverified account
-- [ ] Toggle password visibility
-- [ ] Switch between login/register
-
-**Form Functionality:**
-- [ ] Pre-fill user data
-- [ ] Submit valid form
-- [ ] Submit with missing fields
-- [ ] Submit with message < 10 chars
-- [ ] View after successful submission
-- [ ] Handle session expiry
-
-**Submissions:**
-- [ ] View empty state
-- [ ] View list of submissions
-- [ ] Pull to refresh
-- [ ] View submission details
-- [ ] Delete submission
-- [ ] Navigate back
-
-**Edge Cases:**
-- [ ] No internet connection
-- [ ] Server timeout
-- [ ] Invalid server response
-- [ ] Keyboard handling
-- [ ] Multiple rapid taps
-- [ ] App backgrounding during operation
-
-### Automated Testing (Future)
-
-**Unit Tests:**
-```bash
-# Run Jest tests
-npm test
-
-# With coverage
-npm test -- --coverage
-```
-
-**E2E Tests:**
-```bash
-# Run Detox tests
-detox test --configuration ios.sim.debug
-```
-
----
-
-## 📈 Performance Considerations
-
-### Current Optimizations
-- ✅ Minimize re-renders with proper state management
-- ✅ Use FlatList for efficient list rendering
-- ✅ Keyboard handling to prevent layout shifts
-- ✅ Debounced inputs (where applicable)
-- ✅ Optimized images (PNG compressed)
-
-### Future Optimizations
-- [ ] Implement React.memo for components
-- [ ] Use useCallback for event handlers
-- [ ] Lazy load screens
-- [ ] Implement image caching
-- [ ] Optimize bundle size
-- [ ] Use Hermes engine (Android)
-- [ ] Implement request cancellation
-
----
-
-## 📊 App Metrics
-
-### Current Statistics
-- **Screens:** 6 (Login, OTP, Form, Submissions, Detail, Edit)
-- **API Endpoints:** 8
-- **Custom Components:** Minimal (using React Native core)
-- **Assets:** 15+ custom icons
-- **Dependencies:** ~30 packages
-- **TypeScript Coverage:** 100%
-- **Minimum iOS:** 13.0
-- **Minimum Android:** 6.0 (API 23)
-
----
-
-## 🤝 Contributing
+##  Contributing
 
 While this is an assessment project, feedback and suggestions are welcome!
 
@@ -1153,86 +821,67 @@ While this is an assessment project, feedback and suggestions are welcome!
 
 ---
 
-## 📝 License
+##  License
 
-This project is part of the Kilimo App Practical Assessment.
+This project is part of the Kilimo App Practical Assessment for DataQue Analytics.
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
-- **React Native** team for the amazing framework
-- **Expo** team for the excellent developer experience
-- **React Navigation** for the powerful navigation library
+- **Hono.js** team for the lightweight, fast framework
+- **Neon** for serverless PostgreSQL hosting
+- **Drizzle ORM** for the excellent TypeScript-first ORM
 - Assessment reviewers for the detailed requirements
+- **DataQue Analytics** Thank you for the assessment opportunity
 
 ---
 
-## 📧 Contact
+## Contact
 
 **Developer:** Christine Nyambwari  
-**Email:** [your-email@example.com]  
-**GitHub:** [github.com/your-username]  
-**Backend Repository:** [github.com/your-username/kilimo-backend]
+**Email:** [christinenyambwari@gmail.com]  
+**GitHub:** [(https://github.com/stine-ri)]
 
 ---
 
-## 📊 Project Status
+##  Project Status
 
-### ✅ Completed Features (Core Requirements)
+**Completed Features:**
+- User registration and authentication
+- Email verification with OTP
+- Form submission system
+- JWT-based authorization
+- Database schema and migrations
+- Email service with templates
+- Rate limiting and security
+- Comprehensive error handling
 
-- [x] User registration with email/password
-- [x] Email verification via OTP
-- [x] User login
-- [x] Form submission for authenticated users
-- [x] View submission history
-- [x] JWT token authentication
-- [x] Session management
-- [x] Error handling
-- [x] Loading states
-- [x] Input validation
-
-### ✅ Completed Features (Bonus)
-
-- [x] Submission details view
-- [x] Delete submissions
-- [x] Edit submissions
-- [x] Pull-to-refresh
-- [x] Empty states
-- [x] Password visibility toggle
-- [x] OTP countdown timer
-- [x] Form pre-filling
-- [x] Logout functionality
-
-### 🔄 Future Enhancements
-
-- [ ] Unit tests
-- [ ] E2E tests
-- [ ] Offline mode
-- [ ] Push notifications
-- [ ] Biometric auth
-- [ ] Dark mode
-- [ ] i18n support
+ **Future Enhancements:**
+- Unit and integration tests
+- API documentation with Swagger
+- Admin dashboard
+- Email template customization
+- Advanced analytics
+- Webhook support
+- Multi-language support
 
 ---
 
-## 🎯 Assessment Criteria Met
+##  Known Issues
 
-| Criteria | Status | Notes |
-|----------|--------|-------|
-| User Registration | ✅ Complete | With email OTP verification |
-| User Login | ✅ Complete | JWT token-based |
-| Email Verification | ✅ Complete | 6-digit OTP, 2-min expiry |
-| Form Submission | ✅ Complete | With validation |
-| Authentication Flow | ✅ Complete | Secure token storage |
-| Error Handling | ✅ Complete | User-friendly messages |
-| Code Quality | ✅ Complete | TypeScript, organized structure |
-| UI/UX | ✅ Complete | Clean, intuitive design |
-| **Bonus Features** | ✅ Complete | Edit, Delete, History |
+No known issues at this time. Please report any bugs via GitHub Issues.
 
 ---
 
-**Last Updated:** February 2024  
-**Version:** 1.0.0  
-**Platform:** iOS & Android  
-**Framework:** React Native + Expo
+##  Performance Considerations
+
+- Database connection pooling via Neon
+- Efficient ORM queries with Drizzle
+- Minimal middleware overhead with Hono
+- JWT verification caching (can be added)
+- Email queue system (future enhancement)
+
+---
+
+**Last Updated:** February 2026  
