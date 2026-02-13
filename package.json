@@ -1,0 +1,47 @@
+{
+  "name": "kilimo-backend",
+  "version": "1.0.0",
+  "description": "Kilimo App Backend - Node.js + Hono + TypeScript + Drizzle ORM",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "generate:migration": "drizzle-kit generate",
+    "migrate": "tsx src/drizzle/migrate.ts",
+    "studio": "drizzle-kit studio",
+    "push": "drizzle-kit generate && tsx src/drizzle/migrate.ts"
+  },
+  "keywords": [
+    "hono",
+    "typescript",
+    "drizzle",
+    "postgresql"
+  ],
+  "author": "Christine",
+  "license": "ISC",
+  "packageManager": "pnpm@10.18.3",
+  "dependencies": {
+    "@hono/node-server": "^1.19.5",
+    "@neondatabase/serverless": "^1.0.2",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.4",
+    "drizzle-orm": "^0.44.7",
+    "hono": "^4.11.9",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^8.0.1",
+    "typescript": "^5.9.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.9.1",
+    "@types/nodemailer": "^7.0.9",
+    "drizzle-kit": "^0.31.5",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
