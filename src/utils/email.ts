@@ -2,22 +2,22 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
-// Explicitly load .env file
+//  load .env file
 dotenv.config();
 
 console.log('Email Configuration Check:');
-console.log('SMTP_HOST:', process.env.SMTP_HOST ? '✅ Set' : '❌ Missing');
-console.log('SMTP_PORT:', process.env.SMTP_PORT ? '✅ Set' : '❌ Missing');
-console.log('SMTP_USER:', process.env.SMTP_USER ? '✅ Set' : '❌ Missing');
-console.log('SMTP_PASS:', process.env.SMTP_PASS ? '✅ Set' : '❌ Missing');
-console.log('FROM_EMAIL:', process.env.FROM_EMAIL ? '✅ Set' : '❌ Missing');
+console.log('SMTP_HOST:', process.env.SMTP_HOST ? ' Set' : 'Missing');
+console.log('SMTP_PORT:', process.env.SMTP_PORT ? 'Set' : 'Missing');
+console.log('SMTP_USER:', process.env.SMTP_USER ? 'Set' : 'Missing');
+console.log('SMTP_PASS:', process.env.SMTP_PASS ? 'Set' : 'Missing');
+console.log('FROM_EMAIL:', process.env.FROM_EMAIL ? 'Set' : 'Missing');
 
 
 // Email configuration
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false, // true for 465, false for other ports
+  secure: false, // true for 465 and also false for other ports
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -76,7 +76,7 @@ export const sendOTPEmail = async (
             <p>If you didn't request this code, please ignore this email or contact support if you're concerned about your account security.</p>
           </div>
           <div class="footer">
-            <p>&copy; 2024 Kilimo App. All rights reserved.</p>
+            <p>&copy; 2026 Kilimo App. All rights reserved.</p>
             <p>This is an automated message, please do not reply.</p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export const sendWelcomeEmail = async (
       <body>
         <div class="container">
           <div class="header">
-            <h1>Welcome to Kilimo App! 🎉</h1>
+            <h1>Welcome to Kilimo App!</h1>
           </div>
           <div class="content">
             <h2>Hello ${userName}!</h2>

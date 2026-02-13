@@ -13,8 +13,6 @@ yarn-error.log*
 dist/
 build/
 
-# Database
-drizzle/
 
 # IDE
 .vscode/

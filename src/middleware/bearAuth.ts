@@ -22,7 +22,7 @@ export const authenticate = async (c: Context, next: Next) => {
     );
   }
 
-  const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+  const token = authHeader.substring(7); 
 
   const decoded = verifyToken(token);
 

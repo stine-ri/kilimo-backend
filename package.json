@@ -32,6 +32,7 @@
     "hono-rate-limiter": "^0.5.3",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^8.0.1",
+    "react-native-dotenv": "^3.4.11",
     "typescript": "^5.9.3",
     "zod": "^4.1.12"
   },

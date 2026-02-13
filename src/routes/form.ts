@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { formSubmissionSchema } from '../utils/validation';
 import { authenticate } from '../middleware/bearAuth';
 
-// Create a typed Hono instance with AuthContext
+// Creates a typed Hono instance with AuthContext
 type AuthEnv = {
   Variables: {
     userId: string;
@@ -19,7 +19,7 @@ const formRoutes = new Hono<AuthEnv>();
 // Submit form (protected route)
 formRoutes.post('/submit', authenticate, async (c) => {
   try {
-    const userId = c.var.userId; // Use c.var instead of c.get
+    const userId = c.var.userId; 
     const body = await c.req.json();
     const validatedData = formSubmissionSchema.parse(body);
 
@@ -164,4 +164,107 @@ formRoutes.get('/submissions/:id', authenticate, async (c) => {
   }
 });
 
+// Delete submission (protected route)
+formRoutes.delete('/submissions/:id', authenticate, async (c) => {
+  try {
+    const userId = c.var.userId;
+    const submissionId = c.req.param('id');
+
+    // Check if submission exists and belongs to user
+    const submission = await db.query.formSubmissions.findFirst({
+      where: eq(formSubmissions.id, submissionId),
+    });
+
+    if (!submission) {
+      return c.json({ success: false, message: 'Submission not found' }, 404);
+    }
+
+    if (submission.userId !== userId) {
+      return c.json({ success: false, message: 'Unauthorized' }, 403);
+    }
+
+    // Delete submission
+    await db.delete(formSubmissions).where(eq(formSubmissions.id, submissionId));
+
+    return c.json({ success: true, message: 'Submission deleted successfully' });
+  } catch (error) {
+    return c.json({ success: false, message: 'Delete failed' }, 500);
+  }
+});
+// Update submission (protected route)
+formRoutes.put('/submissions/:id', authenticate, async (c) => {
+  try {
+    const userId = c.var.userId;
+    const submissionId = c.req.param('id');
+    const body = await c.req.json();
+    const validatedData = formSubmissionSchema.parse(body);
+
+    // Check if submission exists and belongs to user
+    const submission = await db.query.formSubmissions.findFirst({
+      where: eq(formSubmissions.id, submissionId),
+    });
+
+    if (!submission) {
+      return c.json(
+        {
+          success: false,
+          message: 'Submission not found',
+        },
+        404
+      );
+    }
+
+    if (submission.userId !== userId) {
+      return c.json(
+        {
+          success: false,
+          message: 'Unauthorized to edit this submission',
+        },
+        403
+      );
+    }
+
+    // Update submission
+    const [updatedSubmission] = await db
+      .update(formSubmissions)
+      .set({
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        email: validatedData.email,
+        phoneNumber: validatedData.phoneNumber,
+        message: validatedData.message,
+        updatedAt: new Date(), // Add this field to your schema if needed
+      })
+      .where(eq(formSubmissions.id, submissionId))
+      .returning();
+
+    return c.json({
+      success: true,
+      message: 'Submission updated successfully',
+      data: updatedSubmission,
+    });
+  } catch (error: any) {
+    console.error('Update submission error:', error);
+
+    if (error.name === 'ZodError') {
+      return c.json(
+        {
+          success: false,
+          message: 'Validation error',
+          errors: error.errors,
+        },
+        400
+      );
+    }
+
+    return c.json(
+      {
+        success: false,
+        message: 'Failed to update submission',
+        error: error.message,
+      },
+      500
+    );
+  }
+});
 export default formRoutes;
