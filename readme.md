@@ -133,7 +133,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/stine-ri/kilimo-mobile-app.git
+git clone https://github.com/stine-ri/kilimo-backend.git
 cd kilimo-backend
 ```
 
