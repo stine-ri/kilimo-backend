@@ -9,16 +9,16 @@ import {
   loginSchema,
   verifyOTPSchema,
   resendOTPSchema,
-} from '../utils/validation';
+} from '../utils/validation.js';
 import {
   hashPassword,
   comparePassword,
   generateToken,
   generateOTP,
   getOTPExpiration,
-} from '../utils/auth';
-import { sendOTPEmail, sendWelcomeEmail } from '../utils/email';
-import { authLimiter, otpLimiter } from '../utils/rateLimiter';
+} from '../utils/auth.js';
+import { sendOTPEmail, sendWelcomeEmail } from '../utils/email.js';
+import { authLimiter, otpLimiter } from '../utils/rateLimiter.js';
 
 const authRoutes = new Hono();
 
