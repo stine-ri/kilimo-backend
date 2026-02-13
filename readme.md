@@ -842,7 +842,7 @@ This project is part of the Kilimo App Practical Assessment for DataQue Analytic
 **Developer:** Christine Nyambwari  
 **Email:** [christinenyambwari@gmail.com]  
 **GitHub:** [(https://github.com/stine-ri)]
-
+**Frontend Repository:** [https://github.com/stine-ri/kilimo-mobile-app.git]
 ---
 
 ##  Project Status
