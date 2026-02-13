@@ -7,8 +7,8 @@ import * as dotenv from 'dotenv';
 import { db } from "./drizzle/db";
 
 // Import routes
-import authRoutes from './routes/auth';
-import formRoutes from './routes/form';
+import authRoutes from './routes/auth.js';
+import formRoutes from './routes/form.js';
 
 // Load environment variables
 dotenv.config();

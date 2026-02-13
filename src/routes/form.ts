@@ -1,11 +1,11 @@
 // kilimo-backend/src/routes/form.ts
 
 import { Hono } from 'hono';
-import { db } from '../drizzle/db';
-import { formSubmissions, users } from '../drizzle/schema';
+import { db } from '../drizzle/db.js';
+import { formSubmissions, users } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm';
-import { formSubmissionSchema } from '../utils/validation';
-import { authenticate } from '../middleware/bearAuth';
+import { formSubmissionSchema } from '../utils/validation.js';
+import { authenticate } from '../middleware/bearAuth.js';
 
 // Creates a typed Hono instance with AuthContext
 type AuthEnv = {

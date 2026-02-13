@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Kilimo App Backend - Node.js + Hono + TypeScript + Drizzle ORM",
   "main": "index.js",
+  "type": "module", 
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

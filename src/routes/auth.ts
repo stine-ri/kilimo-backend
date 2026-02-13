@@ -1,8 +1,8 @@
 // kilimo-backend/src/routes/auth.ts
 
 import { Hono } from 'hono';
-import { db } from '../drizzle/db';
-import { users, otpVerifications } from '../drizzle/schema';
+import { db } from '../drizzle/db.js';
+import { users, otpVerifications } from '../drizzle/schema.js';
 import { eq, and, gt } from 'drizzle-orm';
 import {
   registerSchema,

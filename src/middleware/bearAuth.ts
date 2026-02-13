@@ -1,6 +1,6 @@
 // kilimo-backend/src/middleware
 import { Context, Next } from 'hono';
-import { verifyToken } from '../utils/auth';
+import { verifyToken } from '../utils/auth.js';
 
 // Extend Hono context to include user
 export interface AuthContext extends Context {
