@@ -9,7 +9,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -31,7 +31,7 @@
 
 ---
 
-## 🌟 Overview
+## Overview
 
 Kilimo App Backend is a production-ready REST API that powers the Kilimo farming assistant mobile application. It provides secure user authentication with email verification via OTP, form submission capabilities, and comprehensive user management.
 
@@ -41,35 +41,35 @@ Kilimo App Backend is a production-ready REST API that powers the Kilimo farming
 
 ---
 
-## ✨ Features
+##  Features
 
 ### Core Functionality
-- ✅ **User Registration** with email/password
-- ✅ **Email Verification** via 6-digit OTP (2-minute expiry)
-- ✅ **Secure Authentication** using JWT tokens
-- ✅ **Form Submission** for authenticated users
-- ✅ **User Profile Management**
+-  **User Registration** with email/password
+-  **Email Verification** via 6-digit OTP (2-minute expiry)
+-  **Secure Authentication** using JWT tokens
+-  **Form Submission** for authenticated users
+-  **User Profile Management**
 
 ### Security Features
-- 🔐 **Password Hashing** with bcrypt (10 salt rounds)
-- 🔑 **JWT Authentication** with 7-day token expiry
-- 🛡️ **Rate Limiting** on authentication endpoints
-- 📧 **Email Verification** mandatory before access
-- 🔒 **OTP Attempt Limiting** (max 3 attempts)
-- 🚫 **Input Validation** using Zod schemas
+-  **Password Hashing** with bcrypt (10 salt rounds)
+-  **JWT Authentication** with 7-day token expiry
+-  **Rate Limiting** on authentication endpoints
+-  **Email Verification** mandatory before access
+-  **OTP Attempt Limiting** (max 3 attempts)
+-  **Input Validation** using Zod schemas
 
 ### Additional Features
-- 📨 **Email Service** with HTML templates (OTP & Welcome emails)
-- 🗄️ **PostgreSQL Database** hosted on Neon (serverless)
-- 📊 **Drizzle ORM** for type-safe database queries
-- 🔄 **Database Migrations** support
-- 📝 **Comprehensive Error Handling**
-- 🏥 **Health Check Endpoint**
-- 📋 **TypeScript** for full type safety
+-  **Email Service** with HTML templates (OTP & Welcome emails)
+-  **PostgreSQL Database** hosted on Neon (serverless)
+-  **Drizzle ORM** for type-safe database queries
+-  **Database Migrations** support
+-  **Comprehensive Error Handling**
+-  **Health Check Endpoint**
+-  **TypeScript** for full type safety
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Category | Technology |
 |----------|-----------|
@@ -86,7 +86,7 @@ Kilimo App Backend is a production-ready REST API that powers the Kilimo farming
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 kilimo-backend/
@@ -117,7 +117,7 @@ kilimo-backend/
 
 ---
 
-## 📦 Prerequisites
+##  Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -128,12 +128,12 @@ Before you begin, ensure you have the following installed:
 
 ---
 
-## 🚀 Installation
+##  Installation
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/kilimo-backend.git
+git clone https://github.com/stine-ri/kilimo-mobile-app.git
 cd kilimo-backend
 ```
 
@@ -159,7 +159,7 @@ Edit `.env` with your actual values (see [Environment Variables](#environment-va
 
 ---
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 Create a `.env` file in the root directory with the following variables:
 
@@ -172,7 +172,7 @@ PORT=3000
 NODE_ENV=development
 
 # JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-change-in-production-min-32-chars
+JWT_SECRET=your-super-secret-jwt
 
 # Email Configuration (SMTP)
 SMTP_HOST=smtp.gmail.com
@@ -236,7 +236,7 @@ npm run db:studio
 
 ---
 
-## ▶️ Running the Application
+##  Running the Application
 
 ### Development Mode (with auto-reload)
 
@@ -258,7 +258,7 @@ The server will start on `http://localhost:3000` (or your configured PORT).
 
 ---
 
-## 📚 API Documentation
+## API Documentation
 
 ### Base URL
 ```
@@ -546,7 +546,7 @@ All endpoints follow a consistent error format:
 {
   "success": false,
   "message": "Error description here",
-  "errors": [] // Optional: validation errors
+  "errors": [] // validation errors
 }
 ```
 
@@ -591,7 +591,7 @@ sequenceDiagram
 
 ---
 
-## 🔒 Security Features
+##  Security Features
 
 ### Implemented Security Measures
 
@@ -679,7 +679,7 @@ CREATE TABLE form_submissions (
 
 ---
 
-## 👨‍💻 Development Notes
+##  Development Notes
 
 ### NPM Scripts
 
@@ -698,25 +698,25 @@ CREATE TABLE form_submissions (
 ### Code Quality
 
 - **TypeScript** strict mode enabled
-- **ESLint** (optional - can be added)
-- **Prettier** (optional - can be added)
+- **ESLint** (optional -> can be added)
+- **Prettier** (optional -> can be added)
 - Type-safe database queries with Drizzle
 - Comprehensive error handling
 
 ### Development Best Practices Followed
 
-✅ Environment-based configuration  
-✅ Separation of concerns (routes, middleware, utils)  
-✅ Type safety throughout the codebase  
-✅ Consistent API response format  
-✅ Comprehensive input validation  
-✅ Proper error handling and logging  
-✅ Database migrations for version control  
-✅ Modular and reusable code structure  
+ Environment-based configuration  
+ Separation of concerns (routes, middleware, utils)  
+ Type safety throughout the codebase  
+ Consistent API response format  
+ Comprehensive input validation  
+ Proper error handling and logging  
+ Database migrations for version control  
+ Modular and reusable code structure  
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Manual Testing
 
@@ -770,11 +770,11 @@ Consider adding:
 
 ---
 
-## 🚀 Deployment
+##  Deployment
 
 ### Prerequisites for Production
 
-- [ ] Change `JWT_SECRET` to a strong random value (min 32 characters)
+- [ ] Change `JWT_SECRET` to a strong random value 
 - [ ] Set `NODE_ENV=production`
 - [ ] Configure production database URL
 - [ ] Set up production email service
@@ -799,15 +799,15 @@ This application can be deployed to:
 
 Before deploying, ensure all environment variables are set in your hosting platform:
 
-- ✅ `DATABASE_URL` (Neon connection string)
-- ✅ `JWT_SECRET` (strong secret key)
-- ✅ `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
-- ✅ `PORT` (usually provided by platform)
-- ✅ `NODE_ENV=production`
+-  `DATABASE_URL` (Neon connection string)
+-  `JWT_SECRET` (strong secret key)
+-  `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+-  `PORT` (usually provided by platform)
+-  `NODE_ENV=production`
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 While this is an assessment project, feedback and suggestions are welcome!
 
@@ -821,32 +821,33 @@ While this is an assessment project, feedback and suggestions are welcome!
 
 ---
 
-## 📝 License
+##  License
 
-This project is part of the Kilimo App Practical Assessment.
+This project is part of the Kilimo App Practical Assessment for DataQue Analytics.
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Hono.js** team for the lightweight, fast framework
 - **Neon** for serverless PostgreSQL hosting
 - **Drizzle ORM** for the excellent TypeScript-first ORM
 - Assessment reviewers for the detailed requirements
+- **DataQue Analytics** Thank you for the assessment opportunity
 
 ---
 
-## 📧 Contact
+## Contact
 
 **Developer:** Christine Nyambwari  
-**Email:** [your-email@example.com]  
-**GitHub:** [github.com/your-username]
+**Email:** [christinenyambwari@gmail.com]  
+**GitHub:** [(https://github.com/stine-ri)]
 
 ---
 
-## 📊 Project Status
+##  Project Status
 
-✅ **Completed Features:**
+**Completed Features:**
 - User registration and authentication
 - Email verification with OTP
 - Form submission system
@@ -856,7 +857,7 @@ This project is part of the Kilimo App Practical Assessment.
 - Rate limiting and security
 - Comprehensive error handling
 
-🔄 **Future Enhancements:**
+ **Future Enhancements:**
 - Unit and integration tests
 - API documentation with Swagger
 - Admin dashboard
@@ -867,13 +868,13 @@ This project is part of the Kilimo App Practical Assessment.
 
 ---
 
-## 🐛 Known Issues
+##  Known Issues
 
 No known issues at this time. Please report any bugs via GitHub Issues.
 
 ---
 
-## 📈 Performance Considerations
+##  Performance Considerations
 
 - Database connection pooling via Neon
 - Efficient ORM queries with Drizzle
@@ -883,5 +884,4 @@ No known issues at this time. Please report any bugs via GitHub Issues.
 
 ---
 
-**Last Updated:** February 2024  
-**Version:** 1.0.0
+**Last Updated:** February 2026  

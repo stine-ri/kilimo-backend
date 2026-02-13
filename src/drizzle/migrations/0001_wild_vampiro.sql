@@ -1,0 +1,1 @@
+ALTER TABLE "form_submissions" ADD COLUMN "updated_at" timestamp DEFAULT now() NOT NULL;
