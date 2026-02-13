@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import * as dotenv from 'dotenv';
-import { db } from "./drizzle/db";
+import { db } from "./drizzle/db.js";
 
 // Import routes
 import authRoutes from './routes/auth.js';
